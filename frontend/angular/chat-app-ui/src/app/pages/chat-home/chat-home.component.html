@@ -1,0 +1,13 @@
+<div class="absolute right-0 top-0 p-2 bg-white">
+    logged in as: {{userName()}}
+</div>
+<div class="h-screen max-h-screen overflow-hidden bg-gradient-to-b from-red-100 to-violet-100">
+    <div class="grid grid-cols-3 gap-2 p-2">
+        <div>
+            <app-chat-list (onSelectUser)="onSelectUser($event)"></app-chat-list>
+        </div>
+        <div class="col-span-2">
+            <app-chat-window [toUser]="selectedUser"></app-chat-window>
+        </div>
+    </div>
+</div>

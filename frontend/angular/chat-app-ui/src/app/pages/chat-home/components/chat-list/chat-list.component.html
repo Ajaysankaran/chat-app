@@ -1,0 +1,9 @@
+<div class="chat-home-container overflow-y-auto">
+    <input class="w-full rounded-xl text-lg p-2 border-2" placeholder=" 🔎 search" />
+    @for (user of userList(); track $index) {
+    <a class="user-list-item" (click)="openChat(user)">
+        <div class="col-span-2"><img src="/assets/user.png" class="w-12 h-12" /></div>
+        <div class="col-span-10">{{user.firstName}} {{user.lastName}}</div>
+    </a>
+    }
+</div>

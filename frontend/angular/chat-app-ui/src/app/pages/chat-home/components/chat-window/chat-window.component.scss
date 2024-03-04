@@ -1,0 +1,13 @@
+.message-base {
+    @apply flex rounded-xl p-1 px-2 text-white w-fit whitespace-pre-wrap text-sm mb-0.5;
+}
+
+.receiver-message {
+    @extend .message-base;
+    @apply justify-start bg-green-600 rounded-tl-none
+}
+
+.sender-message {
+    @extend .message-base;
+    @apply self-end bg-blue-500 rounded-br-none; 
+}
