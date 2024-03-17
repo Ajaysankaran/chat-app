@@ -14,10 +14,10 @@ const getOrCreateConversationIdByUsers = async (userFromId: string, userToId: st
         throw new Error('From ID and to ID cannot be empty')
     }
     const conversationResult = await chatRepo.getConversationIdByUsers([userFromId, userToId]) as Conversations[];
-    if (conversationResult.length === 0 || 
+    if (conversationResult.length === 0 ||
         (!conversationResult.find(conversation => conversation.userId.toString() === userFromId) ||
-        !conversationResult.find(conversation => conversation.userId.toString() === userToId))) {
-        
+            !conversationResult.find(conversation => conversation.userId.toString() === userToId))) {
+
         const converationId = randomUUID();
         logger.info("new conversation created", converationId)
         await chatRepo.createConversationId(userFromId, converationId);
@@ -28,16 +28,23 @@ const getOrCreateConversationIdByUsers = async (userFromId: string, userToId: st
 }
 
 const getMessagesByReceiverId = async (userFromId: string, userToId: string) => {
-    const conversationId = await getOrCreateConversationIdByUsers(userFromId, userToId);
-    const chats = await chatRepo.getMessagesByConversationId(conversationId)
-    if (chats) {
-        return chats.map(chat => ({
-            senderId: chat.sender_id,
-            content: chat.content,
-            createdDate: chat.created_date,
-            isMine: chat.sender_id.toString() === userFromId
-        }) as Message )
+    const conversation = await chatRepo.getConversationIdByUsers([userFromId, userToId]);
+    if (conversation?.length) {
+        const userIds = conversation.map(conv => conv.userId.toString());
+        if (!userIds.includes(userFromId) || !userIds.includes(userToId)) {
+            return []
+        }
+        const chats = await chatRepo.getMessagesByConversationId(conversation[0].conversationId)
+        if (chats) {
+            return chats.map(chat => ({
+                senderId: chat.sender_id,
+                content: chat.content,
+                createdDate: chat.created_date,
+                isMine: chat.sender_id.toString() === userFromId
+            }) as Message)
+        }
     }
+
     return []
 }
 

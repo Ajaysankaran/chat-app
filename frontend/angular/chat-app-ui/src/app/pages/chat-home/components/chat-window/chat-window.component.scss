@@ -1,5 +1,5 @@
 .message-base {
-    @apply flex rounded-xl p-1 px-2 text-white w-fit whitespace-pre-wrap text-sm mb-0.5;
+    @apply flex rounded-xl p-1 px-2 text-white w-fit whitespace-pre-wrap text-sm mb-0.5 shadow-md;
 }
 
 .receiver-message {

@@ -1,16 +1,16 @@
-import { AfterViewInit, Component, ElementRef, Input, OnInit, SimpleChanges, ViewChild, effect, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, Input, OnInit, SimpleChanges, ViewChild, effect, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Message, SocketMessage } from '@app/models/message';
 import { User } from '@app/models/user';
 import { ChatService, UserService } from 'app/services';
-import { takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-chat-window',
   standalone: true,
   imports: [FormsModule],
   templateUrl: './chat-window.component.html',
-  styleUrl: './chat-window.component.scss'
+  styleUrl: './chat-window.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ChatWindowComponent implements OnInit {
   
@@ -24,14 +24,13 @@ export class ChatWindowComponent implements OnInit {
     }
   }
 
-  currentMessage = ""
+  public currentMessage = ""
 
   messages = signal<Message[]>([])
   
 
   constructor(private chatService: ChatService, private userService: UserService) {
     effect(() => {
-      console.log("effect", this.user)
       this.scrollToBottom();
     });
     this.chatService.getMessages();
@@ -62,7 +61,7 @@ export class ChatWindowComponent implements OnInit {
   loadMessages() {
     this.messages.set([])
     this.chatService.getChats(this.user?.userId || '').subscribe(res => {
-      console.log(res)
+      console.log("message: ", res)
       this.messages.set(res)
     })
     

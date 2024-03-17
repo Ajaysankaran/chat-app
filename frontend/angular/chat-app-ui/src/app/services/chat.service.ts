@@ -18,7 +18,6 @@ export class ChatService {
     constructor(private httpClient: HttpClient, private userService: UserService) {
         this.baseUrL = localStorage.getItem("chatBaseUrl") || ""
         this.connect();
-        console.log(this.baseUrL)
     }
 
     getChats(userToId: string) {
@@ -36,13 +35,11 @@ export class ChatService {
     }
 
     sendMessages(message: SocketMessage) {
-        console.log("sending message: ", message)
         this.socket.emit('message', message)
     }
 
     getMessages() {
         this.socket.on('message', (message: SocketMessage) => {
-            console.log("GotMessage: ", message)
             this.messageSubject.next(message)
         })
     }

@@ -7,7 +7,7 @@
             <app-chat-list (onSelectUser)="onSelectUser($event)"></app-chat-list>
         </div>
         <div class="col-span-2">
-            <app-chat-window [toUser]="selectedUser"></app-chat-window>
+            <app-chat-window [toUser]="selectedUser()"></app-chat-window>
         </div>
     </div>
 </div>

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { UserService } from '@app/services';
 
@@ -11,16 +11,22 @@ import { UserService } from '@app/services';
 })
 export class LoginComponent {
 
+  public userName = signal<string | undefined>("");
+
   constructor(private userService: UserService, private router: Router) {
 
   }
 
-  onLogin(userId: string) {
-    this.userService.loginUser(userId).subscribe(res => {
-      console.log(res)
-      localStorage.removeItem('user')
-      this.router.navigate(['/chat-home'])
-    })
+  onLogin(userId: string | undefined) {
+    if (userId) {
+      this.userService.loginUser(userId!).subscribe(res => {
+        localStorage.removeItem('user')
+        this.router.navigate(['/chat-home'])
+      })
+    }
   }
 
+  setUserName(event: any) {
+    this.userName.set(event?.target?.value || "")
+  }
 }

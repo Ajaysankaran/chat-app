@@ -22,3 +22,19 @@
     @extend .user-header-base;
     @apply bg-gradient-to-r from-sky-100 to-teal-100 border
 }
+
+.form-control {
+    @apply w-full rounded-xl p-2 
+}
+
+.btn {
+    @apply rounded-lg shadow-md p-2 w-full bg-white justify-center;   
+}
+
+.btn-primary {
+    @apply bg-gradient-to-r from-sky-500 to-teal-500;
+
+    &:hover {
+        @apply bg-gradient-to-r from-sky-800 to-teal-800;
+    }
+}
