@@ -2,8 +2,13 @@
     <input class="w-full rounded-xl text-lg p-2 border-2" placeholder=" 🔎 search" />
     @for (user of userList(); track $index) {
     <a class="user-list-item" (click)="openChat(user)">
-        <div class="col-span-2"><img src="/assets/user.png" class="w-12 h-12" /></div>
-        <div class="col-span-10">{{user.firstName}} {{user.lastName}}</div>
+        <div class="mr-3"><img src="/assets/user.png" class="w-12 h-12" /></div>
+        <div class="grid grid-cols-1">
+            <div>{{user.firstName}} {{user.lastName}}</div>
+            @if (user.currentMessage) {
+                <div class="text-xs text-gray-500">{{user.currentMessage}}</div>
+            }
+        </div>
     </a>
     }
 </div>

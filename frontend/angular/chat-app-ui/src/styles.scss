@@ -10,12 +10,12 @@
 
 
 .user-header-base {
-    @apply grid grid-cols-12 py-3 px-2 rounded-xl justify-center items-center;
+    @apply flex py-3 px-2 rounded-xl justify-start items-center;
 }
 
 .user-list-item {
     @extend .user-header-base;
-    @apply border-b hover:bg-gray-100 hover:cursor-pointer text-sm;
+    @apply border-b grid grid-flow-col hover:bg-gray-100 hover:cursor-pointer text-sm;
 }
 
 .user-header {

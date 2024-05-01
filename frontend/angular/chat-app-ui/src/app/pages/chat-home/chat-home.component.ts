@@ -1,10 +1,9 @@
-import { ChangeDetectionStrategy, Component, OnInit, ViewEncapsulation, signal } from '@angular/core';
-import { ChatListComponent } from './components/chat-list/chat-list.component';
-import { ChatWindowComponent } from './components/chat-window/chat-window.component';
+import { ChangeDetectionStrategy, Component, OnInit, signal } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { User } from '@app/models/user';
 import { ChatService, UserService } from '@app/services';
-import { FormsModule } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ChatListComponent } from './components/chat-list/chat-list.component';
+import { ChatWindowComponent } from './components/chat-window/chat-window.component';
 
 @Component({
   selector: 'app-chat-home',

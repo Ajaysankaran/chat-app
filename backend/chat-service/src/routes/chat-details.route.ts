@@ -13,7 +13,7 @@ chatDetailsRouter.get('/chat', authMiddleware, async (req, res) => {
     logger.info(`chatDetailsRouter userFromId: ${userFromId} | userToId: ${userToId}`)
 
     if (userToId) {
-        const chats = await chatDetailService.getMessagesByReceiverId(userFromId, userToId);
+        const chats = await chatDetailService.getMessagesBySenderAndReceiver(userFromId, userToId);
         return res.status(200).json(chats);
     } else {
         return res.status(400).send("Bad Request, send conversationId as queryParams")

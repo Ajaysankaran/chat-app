@@ -40,6 +40,7 @@ export class ChatService {
 
     getMessages() {
         this.socket.on('message', (message: SocketMessage) => {
+            console.log("message: ", message)
             this.messageSubject.next(message)
         })
     }

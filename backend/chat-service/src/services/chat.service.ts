@@ -22,7 +22,7 @@ class ChatService {
 
             if (socket.connected) {
                 logger.info("Attempting to connect...")
-                const userId = socket.handshake.headers['user_id'] as string
+                const userId = this.getUserId(socket);
                 const userExistsFlag = await this.checkUserId(userId as string);
                 if (!userExistsFlag) {
                     socket.disconnect();
@@ -47,8 +47,9 @@ class ChatService {
         socket.on("message", async (message: InputMessage) => {
             logger.info(`message: ${message.messageTo} | content: ${message.content}`)
             const conversationId = await this.getConversationId(userId, message);
+            const messageFrom = this.getUserId(socket)
             if (message.messageTo && message.content) {
-                this.sendMessage(userId, conversationId, socket, message)
+                this.sendMessage(userId, conversationId!, socket, {...message, messageFrom})
             }
         })
 
@@ -72,8 +73,8 @@ class ChatService {
         if (!conversationId) {
             conversationId = await chatDetailService.getOrCreateConversationIdByUsers(userId, message.messageTo)
             logger.info("new conversationId: %s ", conversationId);
-            this.userConversationIdMap.set(`${userId}:${message.messageTo}`, conversationId);
-            this.userConversationIdMap.set(`${message.messageTo}:${userId}`, conversationId);
+            this.userConversationIdMap.set(`${userId}:${message.messageTo}`, conversationId!);
+            this.userConversationIdMap.set(`${message.messageTo}:${userId}`, conversationId!);
         }
         return conversationId;
     }
@@ -89,6 +90,10 @@ class ChatService {
             socket.to(socketId).emit('message', message);
         }
         chatDetailService.saveChats(conversationId, userId, message.content)
+    }
+
+    getUserId(socket: any) {
+        return socket.handshake.headers['user_id'] as string;
     }
 }
 

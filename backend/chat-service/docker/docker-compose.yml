@@ -1,24 +1,64 @@
 version: '3.9'
 
+networks:
+  cassandra: 
+  # redis:
+  #   driver: bridge
+
 services:
-  cassandra_db:
+  chat_service_db:
     image: 'cassandra:latest'
     container_name: chat_service_db
+    networks:
+      - cassandra
     ports:
       - 9042:9042
     volumes:
       - /Users/ajaysankaran/Desktop/code/db/cassandra:/var/lib/cassandra
+    # environment: &environment
+    #   CASSANDRA_SEEDS: "chat_service_db,chat_service_db2,chat_service_db3"   
+    #   CASSANDRA_CLUSTER_NAME: MyTestCluster 
+    #   CASSANDRA_DC: DC1 
+    #   CASSANDRA_RACK: RACK1 
+    #   CASSANDRA_ENDPOINT_SNITCH: GossipingPropertyFileSnitch 
+    #   CASSANDRA_NUM_TOKENS: 128 
   
-  redis:
-    image: 'redis/redis-stack'
-    container_name: chat_service_redis
-    ports:
-      - 6379:6379
-    volumes:
-      - /Users/ajaysankaran/Desktop/code/db/redis:/root/redis
+  # chat_service_db2: 
+  #   image: cassandra:latest 
+  #   container_name: chat_service_db2 
+  #   hostname: chat_service_db2 
+  #   networks: 
+  #     - cassandra 
+  #   ports: 
+  #     - "9043:9042" 
+  #   volumes:
+  #     - /Users/ajaysankaran/Desktop/code/db/cassandra2:/var/lib/cassandra
+  #   environment: *environment   
+  #   depends_on: 
+  #     chat_service_db:  
+  #       condition: service_started 
   
+  # chat_service_db3: 
+  #   image: cassandra:latest 
+  #   container_name: chat_service_db3 
+  #   hostname: chat_service_db3 
+  #   networks: 
+  #     - cassandra 
+  #   ports: 
+  #     - "9044:9042" 
+  #   volumes:
+  #     - /Users/ajaysankaran/Desktop/code/db/cassandra3:/var/lib/cassandra
+  #   environment: *environment   
+  #   depends_on: 
+  #     chat_service_db2:   
+  #       condition: service_started
 
-networks:
-  redis:
-    driver: bridge
+  # redis:
+  #   image: 'redis/redis-stack'
+  #   container_name: chat_service_redis
+  #   ports:
+  #     - 6379:6379
+  #   volumes:
+  #     - /Users/ajaysankaran/Desktop/code/db/redis:/root/redis
+  
 

@@ -1,5 +1,4 @@
 import { Routes } from '@angular/router';
-import { ChatHomeComponent } from './pages/chat-home/chat-home.component';
 import { LoginComponent } from './pages/login/login.component';
 
 export const routes: Routes = [
@@ -14,6 +13,6 @@ export const routes: Routes = [
     },
     {
         path: 'chat-home',
-        component: ChatHomeComponent
+        loadComponent: () => import('./pages/chat-home/chat-home.component').then(m => m.ChatHomeComponent)
     },
 ];

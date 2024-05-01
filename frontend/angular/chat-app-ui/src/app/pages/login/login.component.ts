@@ -18,6 +18,7 @@ export class LoginComponent {
   }
 
   onLogin(userId: string | undefined) {
+    console.log(userId)
     if (userId) {
       this.userService.loginUser(userId!).subscribe(res => {
         localStorage.removeItem('user')

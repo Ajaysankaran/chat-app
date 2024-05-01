@@ -1,8 +1,11 @@
 import { ChangeDetectionStrategy, Component, ElementRef, Input, OnInit, SimpleChanges, ViewChild, effect, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { BaseMixinComponent } from '@app/core/mixins/base';
+import { DestroyMixin } from '@app/core/mixins/destroy.mixin';
 import { Message, SocketMessage } from '@app/models/message';
 import { User } from '@app/models/user';
 import { ChatService, UserService } from 'app/services';
+import { takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-chat-window',
@@ -12,12 +15,12 @@ import { ChatService, UserService } from 'app/services';
   styleUrl: './chat-window.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ChatWindowComponent implements OnInit {
-  
+export class ChatWindowComponent extends DestroyMixin(BaseMixinComponent) implements OnInit {
+
   @Input('toUser') user: User | undefined
   private messageListElement?: ElementRef<HTMLDivElement>;
 
-  @ViewChild('messageList', {static: false}) set content (content: ElementRef<HTMLDivElement>) {
+  @ViewChild('messageList', { static: false }) set content(content: ElementRef<HTMLDivElement>) {
     if (content) {
       this.messageListElement = content
       this.scrollToBottom();
@@ -27,29 +30,31 @@ export class ChatWindowComponent implements OnInit {
   public currentMessage = ""
 
   messages = signal<Message[]>([])
-  
+
 
   constructor(private chatService: ChatService, private userService: UserService) {
     effect(() => {
       this.scrollToBottom();
     });
+    super()
     this.chatService.getMessages();
-    this.chatService.receivedMessages.subscribe((message: SocketMessage | undefined) => {
-      if (message) {
-        let val = {
-          content: message.content,
-          isMine: false,
-          senderId: "",
-          receiverId: message.messageTo
-        } as Message
-        this.messages.update((value: Message[]) => [val, ...value])
-      }
-    })
+    this.chatService.receivedMessages.pipe(takeUntil(this.destroyed$))
+      .subscribe((message: SocketMessage | undefined) => {
+        if (message && message.messageFrom === this.user?.userId) {
+          let val = {
+            content: message.content,
+            isMine: false,
+            senderId: "",
+            receiverId: message.messageTo
+          } as Message
+          this.messages.update((value: Message[]) => [val, ...value])
+        }
+      })
   }
 
   ngOnInit() {
 
-}
+  }
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes && changes['user'].currentValue) {
@@ -64,7 +69,7 @@ export class ChatWindowComponent implements OnInit {
       console.log("message: ", res)
       this.messages.set(res)
     })
-    
+
   }
 
   scrollToBottom() {
@@ -73,6 +78,10 @@ export class ChatWindowComponent implements OnInit {
   }
 
   sendMessage() {
+    console.log("currentMessage")
+    if (!this.currentMessage || this.currentMessage.trim() === "") {
+      return;
+    }
     let tempMessge = {
       senderId: this.userService.getUser()!.userId,
       receiverId: this.user!.userId,
